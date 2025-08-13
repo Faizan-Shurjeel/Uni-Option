@@ -1,0 +1,71 @@
+{
+  "url": "https://your-supabase-project-url.supabase.co",
+  "apiKey": "your-supabase-api-key",
+  "database": {
+    "schema": "public",
+    "tables": [
+      {
+        "name": "universities",
+        "columns": [
+          "id",
+          "name",
+          "description",
+          "imageUrl",
+          "address",
+          "latitude",
+          "longitude",
+          "website",
+          "phoneNumber",
+          "email",
+          "eligibilityCriteria",
+          "type"
+        ]
+      },
+      {
+        "name": "degrees",
+        "columns": [
+          "id",
+          "university_id",
+          "name",
+          "description",
+          "duration",
+          "fee"
+        ]
+      },
+      {
+        "name": "application_steps",
+        "columns": [
+          "id",
+          "university_id",
+          "title",
+          "description",
+          "deadline"
+        ]
+      },
+      {
+        "name": "programs",
+        "columns": [
+          "id",
+          "university_id",
+          "name"
+        ]
+      },
+      {
+        "name": "requirements",
+        "columns": [
+          "id",
+          "degree_id",
+          "requirement"
+        ]
+      },
+      {
+        "name": "career_options",
+        "columns": [
+          "id",
+          "degree_id",
+          "career_option"
+        ]
+      }
+    ]
+  }
+}
