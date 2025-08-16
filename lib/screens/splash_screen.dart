@@ -66,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen>
                 builder: (context, child) {
                   return LinearProgressIndicator(
                     value: _animation.value,
-                    backgroundColor: Colors.grey.withOpacity(0.2),
+                    backgroundColor: Colors.grey.withAlpha((0.2 * 255).toInt()),
                     valueColor: AlwaysStoppedAnimation<Color>(
                       Theme.of(context).colorScheme.primary,
                     ),
