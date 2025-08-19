@@ -8,40 +8,82 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final universityProvider = Provider.of<UniversityProvider>(context);
-    final List<University> favoriteUniversities = universityProvider.favorites;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Favorites'),
       ),
-      body: favoriteUniversities.isEmpty
-          ? const Center(
-              child: Text('No favorites yet!'),
-            )
-          : ListView.builder(
-              itemCount: favoriteUniversities.length,
-              itemBuilder: (context, index) {
-                final university = favoriteUniversities[index];
-                return ListTile(
-                  title: Text(university.name),
-                  subtitle: Text(university.location),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.favorite, color: Colors.red),
-                    onPressed: () {
-                      universityProvider.toggleFavorite(university.id);
-                    },
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/university-detail',
-                      arguments: university,
+      body: Consumer<UniversityProvider>(
+        builder: (context, universityProvider, child) {
+          final List<University> favoriteUniversities =
+              universityProvider.favorites;
+
+          return favoriteUniversities.isEmpty
+              ? const Center(
+                  child: EmptyFavorites(), // Custom widget for empty state
+                )
+              : ListView.builder(
+                  itemCount: favoriteUniversities.length,
+                  itemBuilder: (context, index) {
+                    final university = favoriteUniversities[index];
+                    return FavoriteUniversityTile(
+                      key: ValueKey(university.id),
+                      university: university,
                     );
                   },
                 );
-              },
-            ),
+        },
+      ),
+    );
+  }
+}
+
+class FavoriteUniversityTile extends StatelessWidget {
+  const FavoriteUniversityTile({
+    Key? key,
+    required this.university,
+  }) : super(key: key);
+
+  final University university;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(university.name),
+      subtitle: Text(university.location),
+      trailing: IconButton(
+        icon: const Icon(Icons.favorite, color: Colors.red),
+        onPressed: () {
+          Provider.of<UniversityProvider>(context, listen: false)
+              .toggleFavorite(university.id);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Favorite toggled')),
+          );
+        },
+      ),
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          '/university-detail',
+          arguments: university,
+        );
+      },
+    );
+  }
+}
+
+class EmptyFavorites extends StatelessWidget {
+  const EmptyFavorites({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.favorite_border, size: 40),
+          Text('No favorites yet!'),
+        ],
+      ),
     );
   }
 }
