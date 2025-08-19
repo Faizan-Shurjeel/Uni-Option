@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final universityProvider = Provider.of<UniversityProvider>(context);
-    final topUniversities = universityProvider.getTopUniversities(3);
+    final topUniversities = universityProvider.getTopUniversities(6);
     final theme = Theme.of(context);
 
     return Scaffold(
