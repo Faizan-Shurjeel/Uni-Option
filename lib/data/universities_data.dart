@@ -347,7 +347,7 @@ List<University> getUniversitiesData() {
       name: 'University of Engineering & Technology (UET) Lahore',
       description:
           'Historic public engineering university; main campus on G.T. Road, Lahore.',
-      imageUrl: 'assets/images/uet_lahore.png',
+      imageUrl: 'assets/images/UET.png',
       address: 'G.T. Road, Lahore 54890, Pakistan',
       latitude: 31.5790,
       longitude: 74.3559,
@@ -407,7 +407,7 @@ List<University> getUniversitiesData() {
       name: 'COMSATS University Islamabad (CUI) – Islamabad Campus',
       description:
           'Public sector university known for computing, engineering and management programmes.',
-      imageUrl: 'assets/images/comsats_isb.png',
+      imageUrl: 'assets/images/comsats_isb.jpg',
       address: 'Park Road, Tarlai Kalan, Islamabad 45550, Pakistan',
       latitude: 33.6765,
       longitude: 73.1612,
@@ -531,7 +531,7 @@ List<University> getUniversitiesData() {
       name: 'Ghulam Ishaq Khan Institute (GIKI), Topi',
       description:
           'Selective private institute renowned for engineering and computing.',
-      imageUrl: 'assets/images/giki.png',
+      imageUrl: 'assets/images/giki.jpeg',
       address: 'Topi 23640, District Swabi, Khyber Pakhtunkhwa, Pakistan',
       latitude: 34.0640,
       longitude: 72.6480,
@@ -592,7 +592,7 @@ List<University> getUniversitiesData() {
           'Pakistan Institute of Engineering & Applied Sciences (PIEAS), Islamabad',
       description:
           'Public sector research university recognized for nuclear, electrical and materials engineering.',
-      imageUrl: 'assets/images/pieas.png',
+      imageUrl: 'assets/images/pieas.jpeg',
       address: 'Lehtrar Road, Nilore, Islamabad, Pakistan',
       latitude: 33.6277,
       longitude: 73.1570,
