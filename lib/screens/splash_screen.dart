@@ -4,28 +4,41 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _animation;
+  late Animation<double> _progressAnimation;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
-    // Modern loading bar animation
+    
+    // Initialize animations
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    )..repeat(reverse: false);
-    _animation = Tween<double>(begin: 0, end: 1).animate(
+      duration: const Duration(milliseconds: 1500),
+    );
+    
+    _progressAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
-    // Navigate to home screen after a delay
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.of(context).pushReplacementNamed('/home');
+    
+    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+    );
+    
+    // Start animation once
+    _controller.forward();
+    
+    // Navigate after animation completes
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        Navigator.of(context).pushReplacementNamed('/home');
+      }
     });
   }
 
@@ -37,44 +50,60 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final logoSize = size.width * 0.22;
+    
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Main icon
-            const Text(
-              '🎓',
-              style: TextStyle(fontSize: 80),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'UNI-OPTION',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
-              ),
-            ),
-            const SizedBox(height: 32),
-            // Modern animated loading bar
-            SizedBox(
-              width: 80,
-              height: 4,
-              child: AnimatedBuilder(
-                animation: _animation,
-                builder: (context, child) {
-                  return LinearProgressIndicator(
-                    value: _animation.value,
-                    backgroundColor: Colors.grey.withAlpha((0.2 * 255).toInt()),
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).colorScheme.primary,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Theme.of(context).colorScheme.surface,
+              Theme.of(context).colorScheme.surface.withOpacity(0.9),
+            ],
+          ),
+        ),
+        child: Center(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Logo
+                Text(
+                  '🎓',
+                  style: TextStyle(fontSize: logoSize),
+                ),
+                SizedBox(height: size.height * 0.03),
+                const Text(
+                  'UNI-OPTION',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                  ),
+                ),
+                SizedBox(height: size.height * 0.04),
+                // Loading indicator
+                SizedBox(
+                  width: size.width * 0.3,
+                  height: 4,
+                  child: AnimatedBuilder(
+                    animation: _progressAnimation,
+                    builder: (context, _) => LinearProgressIndicator(
+                      value: _progressAnimation.value,
+                      backgroundColor: Colors.grey.withOpacity(0.2),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).colorScheme.primary,
+                      ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
