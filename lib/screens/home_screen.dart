@@ -41,12 +41,16 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              background: Stack(
+                background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.asset(
-                    'assets/images/university1.png',
-                    fit: BoxFit.cover,
+                  Container(
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Icons.school_rounded,
+                    size: 100,
+                    color: Colors.white.withOpacity(0.7),
+                  ),
                   ),
                   Container(
                     decoration: BoxDecoration(

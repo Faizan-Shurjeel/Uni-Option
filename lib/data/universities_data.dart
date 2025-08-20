@@ -404,16 +404,16 @@ List<University> getUniversitiesData() {
     // 7) COMSATS University Islamabad (new)
     University(
       id: '7',
-      name: 'COMSATS University Islamabad (CUI) – Islamabad Campus',
+      name: 'COMSATS University Islamabad (CUI) – Lahore Campus',
       description:
           'Public sector university known for computing, engineering and management programmes.',
-      imageUrl: 'assets/images/comsats_isb.jpg',
-      address: 'Park Road, Tarlai Kalan, Islamabad 45550, Pakistan',
+      imageUrl: 'assets/images/comsats_lhr.jpg',
+      address: 'Defence Road, Lahore 55550, Pakistan',
       latitude: 33.6765,
       longitude: 73.1612,
-      website: 'https://islamabad.comsats.edu.pk/',
-      phoneNumber: '+92-51-9247000',
-      email: 'rizwan_ahmed@comsats.edu.pk',
+      website: 'https://lahore.comsats.edu.pk/',
+      phoneNumber: '+92-42-111-001-007',
+      email: 'info@lahore.comsats.edu.pk',
       eligibilityCriteria:
           'HSSC or equivalent + NTS/NTS-NAT or CUI test as per programme policy.',
       type: 'Public',
