@@ -39,9 +39,9 @@ class FavoritesScreen extends StatelessWidget {
 
 class FavoriteUniversityTile extends StatelessWidget {
   const FavoriteUniversityTile({
-    Key? key,
+    super.key,
     required this.university,
-  }) : super(key: key);
+  });
 
   final University university;
 
@@ -72,7 +72,7 @@ class FavoriteUniversityTile extends StatelessWidget {
 }
 
 class EmptyFavorites extends StatelessWidget {
-  const EmptyFavorites({Key? key}) : super(key: key);
+  const EmptyFavorites({super.key});
 
   @override
   Widget build(BuildContext context) {
