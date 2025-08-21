@@ -276,72 +276,7 @@ List<University> getUniversitiesData() {
       programs: ['Computer Science', 'Management Sciences', 'Economics', 'Law'],
     ),
 
-    // 5) NUST – Islamabad (new)
-    University(
-      id: '5',
-      name: 'National University of Sciences & Technology (NUST), Islamabad',
-      description:
-          'Leading public university in engineering, computing, natural & social sciences.',
-      imageUrl: 'assets/images/nust.png',
-      address: 'Sector H-12, Islamabad, Pakistan',
-      latitude: 33.6423,
-      longitude: 72.9904,
-      website: 'https://nust.edu.pk/',
-      phoneNumber: '+92-51-111-11-6878',
-      email: 'pa.dadmissions@nust.edu.pk',
-      eligibilityCriteria:
-          'HSSC or equivalent + NUST Entry Test (NET) / SAT (as per policy).',
-      type: 'Public',
-      degrees: [
-        Degree(
-          id: '501',
-          name: 'BS Computer Science',
-          description: 'Computing fundamentals, systems, AI, and software.',
-          duration: 4,
-          requirements: ['HSSC (Maths)', 'NET/SAT'],
-          careerOptions: [
-            'Software Engineer',
-            'Systems Engineer',
-            'AI Engineer'
-          ],
-          fee: 0,
-        ),
-        Degree(
-          id: '502',
-          name: 'BE Electrical Engineering',
-          description: 'Electronics, communications, power, and control.',
-          duration: 4,
-          requirements: ['HSSC (Pre-Engg)', 'NET/SAT'],
-          careerOptions: ['Electrical Engineer', 'Telecom Engineer'],
-          fee: 0,
-        ),
-      ],
-      applicationSteps: [
-        ApplicationStep(
-          title: 'NET Registration',
-          description:
-              'Register for NUST Entry Test / provide SAT (if applicable).',
-          deadline: DateTime(2025, 5, 31),
-        ),
-        ApplicationStep(
-          title: 'Testing Window',
-          description: 'Appear in NET on selected date.',
-          deadline: DateTime(2025, 6, 30),
-        ),
-        ApplicationStep(
-          title: 'Merit & Admission',
-          description: 'Merit list and joining formalities.',
-          deadline: DateTime(2025, 8, 10),
-        ),
-      ],
-      programs: [
-        'Computer Science',
-        'Electrical Engineering',
-        'Mechanical Engineering'
-      ],
-    ),
-
-    // 6) UET Lahore (new)
+    // // 6) UET Lahore (new)
     University(
       id: '6',
       name: 'University of Engineering & Technology (UET) Lahore',
@@ -400,251 +335,419 @@ List<University> getUniversitiesData() {
         'Civil Engineering'
       ],
     ),
+    // — New Additions — //
 
-    // 7) COMSATS University Islamabad (new)
+    // 7) University of Central Punjab – Lahore
     University(
       id: '7',
-      name: 'COMSATS University Islamabad (CUI) – Lahore Campus',
+      name: 'University of Central Punjab (UCP), Lahore',
       description:
-          'Public sector university known for computing, engineering and management programmes.',
-      imageUrl: 'assets/images/comsats_lhr.jpg',
-      address: 'Defence Road, Lahore 55550, Pakistan',
-      latitude: 33.6765,
-      longitude: 73.1612,
-      website: 'https://lahore.comsats.edu.pk/',
-      phoneNumber: '+92-42-111-001-007',
-      email: 'info@lahore.comsats.edu.pk',
+          'Private university with a wide range of programmes in arts, sciences, business and IT.',
+      imageUrl: 'assets/images/ucp.jpg',
+      address: 'Gulberg, Lahore, Pakistan',
+      latitude: 31.5204,
+      longitude: 74.3587,
+      website: 'https://www.ucp.edu.pk/',
+      phoneNumber: '+92-42-5755314-7',
+      email: 'info@ucp.edu.pk',
       eligibilityCriteria:
-          'HSSC or equivalent + NTS/NTS-NAT or CUI test as per programme policy.',
-      type: 'Public',
+          'HSSC or equivalent + UCP test / SAT as per programme.',
+      type: 'Private',
       degrees: [
         Degree(
           id: '701',
           name: 'BS Computer Science',
-          description: 'Programming, systems, data, and AI fundamentals.',
+          description: 'Computing fundamentals, programming, web technologies.',
           duration: 4,
-          requirements: ['HSSC (Maths)', 'NAT/Admission test'],
-          careerOptions: ['Software Engineer', 'Data Engineer'],
+          requirements: ['HSSC (Maths)', 'UCP admission test/SAT'],
+          careerOptions: ['Software Developer', 'Web Developer'],
           fee: 0,
         ),
         Degree(
           id: '702',
-          name: 'BS Software Engineering',
-          description: 'Software lifecycle, quality and project management.',
+          name: 'BBA',
+          description:
+              'Business fundamentals including management, finance and marketing.',
           duration: 4,
-          requirements: ['HSSC (Maths)', 'NAT/Admission test'],
-          careerOptions: ['Software Developer', 'QA Engineer'],
+          requirements: ['HSSC or equivalent', 'UCP test'],
+          careerOptions: ['Business Analyst', 'Marketing Executive'],
           fee: 0,
         ),
       ],
       applicationSteps: [
         ApplicationStep(
           title: 'Online Application',
-          description: 'Submit application on CUI portal with test choice.',
-          deadline: DateTime(2025, 7, 5),
+          description: 'Apply via UCP admission portal.',
+          deadline: DateTime(2025, 7, 30),
         ),
         ApplicationStep(
-          title: 'NAT/Admission Test',
-          description: 'Attempt the required test.',
-          deadline: DateTime(2025, 7, 25),
-        ),
-        ApplicationStep(
-          title: 'Merit Processing',
-          description: 'Merit list and fee submission.',
+          title: 'Admission Test',
+          description: 'Appear for UCP test or provide SAT/ACT.',
           deadline: DateTime(2025, 8, 15),
         ),
+        ApplicationStep(
+          title: 'Merit List & Enrollment',
+          description: 'Merit list published, complete admission formalities.',
+          deadline: DateTime(2025, 9, 5),
+        ),
       ],
-      programs: [
-        'Computer Science',
-        'Software Engineering',
-        'Electrical Engineering'
-      ],
+      programs: ['Computer Science', 'Business Administration'],
     ),
 
-    // 8) IBA Karachi (new)
+    // 8) Bahria University – Lahore
     University(
       id: '8',
-      name: 'IBA Karachi – Institute of Business Administration',
+      name: 'Bahria University, Lahore Campus',
       description:
-          'Premier public sector business school with strong computing and economics programmes.',
-      imageUrl: 'assets/images/iba_karachi.png',
-      address: 'Main Campus, University Road, Karachi 75270, Pakistan',
-      latitude: 24.9447,
-      longitude: 67.1133,
-      website: 'https://admissions.iba.edu.pk/',
-      phoneNumber: '+92-21-38104700',
-      email: 'admission@iba.edu.pk',
-      eligibilityCriteria:
-          'HSSC/A-Levels or equivalent + IBA Aptitude Test or SAT/ACT (as per policy).',
+          'Public sector university offering engineering, social sciences, business, IT.',
+      imageUrl: 'assets/images/bahria_u.png',
+      address: 'Lahore Cantt, Lahore, Pakistan',
+      latitude: 31.4878,
+      longitude: 74.3220,
+      website: 'https://lahore.bahria.edu.pk/',
+      phoneNumber: '+92-42-111-188-188',
+      email: 'info@bahria.edu.pk',
+      eligibilityCriteria: 'HSSC or equivalent + Bahria admission test / SAT.',
       type: 'Public',
       degrees: [
         Degree(
           id: '801',
-          name: 'BBA',
+          name: 'BS Computer Science',
           description:
-              'Comprehensive business education with quantitative rigor.',
+              'Foundations of computing, software development and data.',
           duration: 4,
-          requirements: ['HSSC/A-Levels', 'IBA Aptitude Test/SAT'],
-          careerOptions: ['Business Analyst', 'Marketing/Finance Associate'],
+          requirements: ['HSSC (Maths)', 'Admission test'],
+          careerOptions: ['Software Engineer', 'Data Analyst'],
           fee: 0,
         ),
         Degree(
           id: '802',
-          name: 'BS Computer Science',
-          description: 'Core CS, software and data-focused curriculum.',
+          name: 'BS Business Administration',
+          description: 'Business fundamentals, management, finance.',
           duration: 4,
-          requirements: ['HSSC (Maths)/A-Levels', 'Aptitude Test/SAT'],
-          careerOptions: ['Software Engineer', 'Data Analyst'],
-          fee: 0,
-        ),
-      ],
-      applicationSteps: [
-        ApplicationStep(
-          title: 'Online Form',
-          description: 'Apply on IBA Admissions portal and select test center.',
-          deadline: DateTime(2025, 6, 10),
-        ),
-        ApplicationStep(
-          title: 'Aptitude Test/Exemptions',
-          description:
-              'Attempt test or submit SAT/ACT for exemption if eligible.',
-          deadline: DateTime(2025, 7, 10),
-        ),
-        ApplicationStep(
-          title: 'Interview & Offer',
-          description:
-              'Interview (if required), merit list and fee submission.',
-          deadline: DateTime(2025, 8, 10),
-        ),
-      ],
-      programs: [
-        'BBA',
-        'Computer Science',
-        'Accounting & Finance',
-        'Economics'
-      ],
-    ),
-
-    // 9) GIKI – Topi, Khyber Pakhtunkhwa (new)
-    University(
-      id: '9',
-      name: 'Ghulam Ishaq Khan Institute (GIKI), Topi',
-      description:
-          'Selective private institute renowned for engineering and computing.',
-      imageUrl: 'assets/images/giki.jpeg',
-      address: 'Topi 23640, District Swabi, Khyber Pakhtunkhwa, Pakistan',
-      latitude: 34.0640,
-      longitude: 72.6480,
-      website: 'https://giki.edu.pk/',
-      phoneNumber: '+92-938-271858',
-      email: 'oric@giki.edu.pk',
-      eligibilityCriteria:
-          'HSSC (Pre-Engineering/Maths) or equivalent + GIKI admission test/SAT.',
-      type: 'Private',
-      degrees: [
-        Degree(
-          id: '901',
-          name: 'BS Computer Engineering',
-          description: 'Embedded systems, computer architecture, and software.',
-          duration: 4,
-          requirements: ['HSSC (Maths)', 'GIKI test/SAT'],
-          careerOptions: ['Embedded Engineer', 'Systems Engineer'],
-          fee: 0,
-        ),
-        Degree(
-          id: '902',
-          name: 'BS Computer Science',
-          description: 'Algorithms, systems, AI and software practice.',
-          duration: 4,
-          requirements: ['HSSC (Maths)', 'GIKI test/SAT'],
-          careerOptions: ['Software Engineer', 'Data Engineer'],
-          fee: 0,
-        ),
-      ],
-      applicationSteps: [
-        ApplicationStep(
-          title: 'Online Application',
-          description: 'Apply on GIKI admissions portal.',
-          deadline: DateTime(2025, 6, 1),
-        ),
-        ApplicationStep(
-          title: 'Admission Test/SAT',
-          description: 'Attempt GIKI test or provide SAT score.',
-          deadline: DateTime(2025, 6, 25),
-        ),
-        ApplicationStep(
-          title: 'Merit Lists',
-          description: 'Merit processing and enrollment.',
-          deadline: DateTime(2025, 7, 20),
-        ),
-      ],
-      programs: [
-        'Computer Engineering',
-        'Computer Science',
-        'Mechanical Engineering'
-      ],
-    ),
-
-    // 10) PIEAS – Islamabad (new)
-    University(
-      id: '10',
-      name:
-          'Pakistan Institute of Engineering & Applied Sciences (PIEAS), Islamabad',
-      description:
-          'Public sector research university recognized for nuclear, electrical and materials engineering.',
-      imageUrl: 'assets/images/pieas.jpeg',
-      address: 'Lehtrar Road, Nilore, Islamabad, Pakistan',
-      latitude: 33.6277,
-      longitude: 73.1570,
-      website: 'https://www.pieas.edu.pk/',
-      phoneNumber: '+92-51-1111-74327',
-      email: 'registrar@pieas.edu.pk',
-      eligibilityCriteria:
-          'HSSC (Pre-Engineering/Maths) or equivalent + PIEAS admission test (or as per policy).',
-      type: 'Public',
-      degrees: [
-        Degree(
-          id: '1001',
-          name: 'BS Electrical Engineering',
-          description: 'Electronics, power, control and communications.',
-          duration: 4,
-          requirements: ['HSSC (Pre-Engg)', 'PIEAS test'],
-          careerOptions: ['Electrical Engineer', 'Control Engineer'],
-          fee: 0,
-        ),
-        Degree(
-          id: '1002',
-          name: 'BS Computer & Information Sciences',
-          description: 'Core computing with applied research focus.',
-          duration: 4,
-          requirements: ['HSSC (Maths)', 'PIEAS test'],
-          careerOptions: ['Software Engineer', 'Research Engineer'],
+          requirements: ['HSSC or equivalent', 'Admission test'],
+          careerOptions: ['Managerial roles', 'Entrepreneur'],
           fee: 0,
         ),
       ],
       applicationSteps: [
         ApplicationStep(
           title: 'Apply Online',
-          description: 'Submit application on PIEAS portal.',
-          deadline: DateTime(2025, 5, 31),
+          description: 'Submit application via Bahria portal.',
+          deadline: DateTime(2025, 7, 1),
+        ),
+        ApplicationStep(
+          title: 'Entrance Test',
+          description: 'Appear in Bahria admission test.',
+          deadline: DateTime(2025, 7, 20),
+        ),
+        ApplicationStep(
+          title: 'Merit & Admission',
+          description: 'Merit announced, complete enrollment.',
+          deadline: DateTime(2025, 8, 10),
+        ),
+      ],
+      programs: ['Computer Science', 'Business Administration'],
+    ),
+
+    // 9) Information Technology University – Lahore
+    University(
+      id: '9',
+      name: 'Information Technology University (ITU), Lahore',
+      description:
+          'Tech‑focused public university emphasizing IT, data science and design.',
+      imageUrl: 'assets/images/itu.png',
+      address: 'A‑Block, Faisal Town, Lahore, Pakistan',
+      latitude: 31.4802,
+      longitude: 74.3153,
+      website: 'https://itu.edu.pk/',
+      phoneNumber: '+92-42-111-483-111',
+      email: 'info@itu.edu.pk',
+      eligibilityCriteria: 'HSSC or equivalent + ITU entrance exam / SAT.',
+      type: 'Public',
+      degrees: [
+        Degree(
+          id: '901',
+          name: 'BS Computer Science',
+          description:
+              'Advanced computing, AI, data science and software systems.',
+          duration: 4,
+          requirements: ['HSSC (Maths)', 'Entrance exam/SAT'],
+          careerOptions: ['AI Engineer', 'Software Engineer', 'Data Scientist'],
+          fee: 0,
+        ),
+        Degree(
+          id: '902',
+          name: 'BS Data Science',
+          description: 'Statistics, machine learning, data analysis, big data.',
+          duration: 4,
+          requirements: ['HSSC (Maths)', 'Entrance exam/SAT'],
+          careerOptions: ['Data Scientist', 'Business Intelligence Analyst'],
+          fee: 0,
+        ),
+      ],
+      applicationSteps: [
+        ApplicationStep(
+          title: 'Apply Online',
+          description: 'Apply via ITU admissions portal with documents.',
+          deadline: DateTime(2025, 7, 15),
         ),
         ApplicationStep(
           title: 'Admission Test',
-          description: 'Attempt PIEAS test at designated center.',
-          deadline: DateTime(2025, 6, 30),
+          description: 'Sit for the ITU entrance exam / submit SAT.',
+          deadline: DateTime(2025, 8, 1),
         ),
         ApplicationStep(
-          title: 'Selection & Joining',
-          description:
-              'Merit list, medicals (if any) and joining instructions.',
-          deadline: DateTime(2025, 8, 5),
+          title: 'Merit & Enrollment',
+          description: 'Admission finalized; submit fees and enroll.',
+          deadline: DateTime(2025, 8, 25),
         ),
       ],
-      programs: [
-        'Electrical Engineering',
-        'Computer & Information Sciences',
-        'Mechanical Engineering'
+      programs: ['Computer Science', 'Data Science', 'Design'],
+    ),
+
+    // 10) Lahore College for Women University (LCWU) – Lahore
+    University(
+      id: '10',
+      name: 'Lahore College for Women University (LCWU)',
+      description:
+          'Public women’s university offering arts, sciences, and software engineering.',
+      imageUrl: 'assets/images/lcwu.jpg',
+      address: 'Jail Road, Lahore, Pakistan',
+      latitude: 31.5138,
+      longitude: 74.3360,
+      website: 'https://www.lcwu.edu.pk/',
+      phoneNumber: '042‑99203088',
+      email: 'info@lcwu.edu.pk',
+      eligibilityCriteria:
+          'HSSC or equivalent; programme‑specific entry tests where applicable.',
+      type: 'Public',
+      degrees: [
+        Degree(
+          id: '1001',
+          name: 'BS Software Engineering',
+          description: 'Software development, design, engineering principles.',
+          duration: 4,
+          requirements: ['HSSC (Maths)', 'Entry test'],
+          careerOptions: ['Software Developer', 'QA Engineer'],
+          fee: 0,
+        ),
+        Degree(
+          id: '1002',
+          name: 'BS English',
+          description: 'Literature, linguistics, language studies.',
+          duration: 4,
+          requirements: ['HSSC (Second division)'],
+          careerOptions: ['Writer', 'Educator', 'Editor'],
+          fee: 0,
+        ),
       ],
+      applicationSteps: [
+        ApplicationStep(
+          title: 'Submit Application',
+          description: 'Apply via LCWU portal.',
+          deadline: DateTime(2025, 7, 10),
+        ),
+        ApplicationStep(
+          title: 'Entry Test (if required)',
+          description: 'Sit for programme‑specific test.',
+          deadline: DateTime(2025, 7, 25),
+        ),
+        ApplicationStep(
+          title: 'Merit Lists',
+          description: 'Merit announced, complete admission.',
+          deadline: DateTime(2025, 8, 15),
+        ),
+      ],
+      programs: ['Software Engineering', 'English', 'Psychology'],
+    ),
+
+    // 11) Lahore Garrison University (LGU) – Lahore
+    University(
+      id: '11',
+      name: 'Lahore Garrison University (LGU)',
+      description:
+          'Pakistan Army-operated private university offering diverse programs.',
+      imageUrl: 'assets/images/lgu.png',
+      address: 'Lahore, Punjab, Pakistan',
+      latitude: 31.5200,
+      longitude: 74.3200,
+      website: 'https://lgu.edu.pk/',
+      phoneNumber: '042‑XXXXXXX',
+      email: 'info@lgu.edu.pk',
+      eligibilityCriteria:
+          'HSSC or equivalent + LGU entrance test as per programme.',
+      type: 'Private',
+      degrees: [
+        Degree(
+          id: '1101',
+          name: 'BS Management Sciences',
+          description: 'Business administration, management principles.',
+          duration: 4,
+          requirements: ['HSSC', 'Entrance test'],
+          careerOptions: ['Manager', 'Operations Analyst'],
+          fee: 0,
+        ),
+      ],
+      applicationSteps: [
+        ApplicationStep(
+          title: 'Admission Form',
+          description: 'Apply via LGU admissions portal.',
+          deadline: DateTime(2025, 7, 20),
+        ),
+        ApplicationStep(
+          title: 'Entrance Test',
+          description: 'Sit for LGU entry test.',
+          deadline: DateTime(2025, 8, 5),
+        ),
+        ApplicationStep(
+          title: 'Merit List',
+          description: 'Admission finalized, enroll.',
+          deadline: DateTime(2025, 8, 25),
+        ),
+      ],
+      programs: ['Management Sciences'],
+    ),
+
+    // 12) Minhaj University Lahore (MUL)
+    University(
+      id: '12',
+      name: 'Minhaj University Lahore',
+      description: 'Private multidisciplinary university established in 1986.',
+      imageUrl: 'assets/images/minhaj.png',
+      address: 'Model Town, Lahore, Pakistan',
+      latitude: 31.5200,
+      longitude: 74.3700,
+      website: 'https://www.mul.edu.pk/',
+      phoneNumber: '042‑5169120',
+      email: 'info@mul.edu.pk',
+      eligibilityCriteria:
+          'HSSC or equivalent + MUL admission test / as per programme.',
+      type: 'Private',
+      degrees: [
+        Degree(
+          id: '1201',
+          name: 'BS Electrical Engineering',
+          description: 'Engineering fundamentals in electrical systems.',
+          duration: 4,
+          requirements: ['HSSC (Pre‑Engineering)', 'Admission test'],
+          careerOptions: ['Electrical Engineer'],
+          fee: 0,
+        ),
+      ],
+      applicationSteps: [
+        ApplicationStep(
+          title: 'Apply Online',
+          description: 'Submit application via MUL portal.',
+          deadline: DateTime(2025, 7, 5),
+        ),
+        ApplicationStep(
+          title: 'Entrance Test',
+          description: 'Sit for MUL entrance test.',
+          deadline: DateTime(2025, 7, 20),
+        ),
+        ApplicationStep(
+          title: 'Merit List & Enrollment',
+          description: 'Complete admission on merit.',
+          deadline: DateTime(2025, 8, 10),
+        ),
+      ],
+      programs: ['Electrical Engineering'],
+    ),
+
+    // 13) Beaconhouse National University (BNU)
+    University(
+      id: '13',
+      name: 'Beaconhouse National University (BNU), Lahore',
+      description:
+          'Private liberal arts and arts university with arts, design, IT, media.',
+      imageUrl: 'assets/images/bnu.png',
+      address: 'Raiwind Rd, Lahore, Pakistan',
+      latitude: 31.3250,
+      longitude: 74.3140,
+      website: 'https://www.bnu.edu.pk/',
+      phoneNumber: '042‑XXXXXXX',
+      email: 'info@bnu.edu.pk',
+      eligibilityCriteria:
+          'HSSC or equivalent; programme‑specific admission tests where applicable.',
+      type: 'Private',
+      degrees: [
+        Degree(
+          id: '1301',
+          name: 'Bachelor of Visual Design',
+          description: 'Visual arts, media, design principles and practice.',
+          duration: 4,
+          requirements: ['HSSC', 'Design test/audition'],
+          careerOptions: ['Graphic Designer', 'Art Director'],
+          fee: 0,
+        ),
+      ],
+      applicationSteps: [
+        ApplicationStep(
+          title: 'Apply Online',
+          description: 'Submit application via BNU portal.',
+          deadline: DateTime(2025, 7, 15),
+        ),
+        ApplicationStep(
+          title: 'Design Test/Audition',
+          description: 'Appear for programme‑specific entrance test.',
+          deadline: DateTime(2025, 8, 1),
+        ),
+        ApplicationStep(
+          title: 'Merit & Enrollment',
+          description: 'Admission confirmed; enroll and submit fees.',
+          deadline: DateTime(2025, 8, 20),
+        ),
+      ],
+      programs: ['Visual Design', 'Architecture', 'Media & Communication'],
+    ),
+
+    // 14) National Institute of Technology (NIT), Lahore – established 2025
+    University(
+      id: '14',
+      name: 'National Institute of Technology (NIT), Lahore',
+      description:
+          'Private university established in January 2025 in partnership with Arizona State University.',
+      imageUrl: 'assets/images/nit_lahore.png',
+      address: 'Lahore, Punjab, Pakistan',
+      latitude: 31.5200,
+      longitude: 74.3600,
+      website: 'https://www.nit.edu.pk/',
+      phoneNumber: '042‑XXXXXXX',
+      email: 'info@nit.edu.pk',
+      eligibilityCriteria:
+          'HSSC or equivalent + NIT admission test / SAT, as per policy.',
+      type: 'Private',
+      degrees: [
+        Degree(
+          id: '1401',
+          name: 'BS Engineering (ASU‑Mirrored)',
+          description:
+              'Engineering curriculum modeled after Arizona State University.',
+          duration: 4,
+          requirements: ['HSSC (Pre‑Engineering)', 'Admission test/SAT'],
+          careerOptions: ['Engineer (various specializations)'],
+          fee: 0,
+        ),
+      ],
+      applicationSteps: [
+        ApplicationStep(
+          title: 'Apply Online',
+          description: 'Admissions through NIT portal.',
+          deadline: DateTime(2025, 8, 1),
+        ),
+        ApplicationStep(
+          title: 'Entrance Test / SAT',
+          description: 'Take NIT test or submit SAT, per programme policy.',
+          deadline: DateTime(2025, 8, 20),
+        ),
+        ApplicationStep(
+          title: 'Merit & Enrollment',
+          description: 'Admission finalized; enroll and submit fees.',
+          deadline: DateTime(2025, 9, 10),
+        ),
+      ],
+      programs: ['Engineering (ASU‑Mirrored)'],
     ),
   ];
 }
