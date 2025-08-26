@@ -79,7 +79,7 @@ class UniversityDetailScreen extends StatelessWidget {
   }
 
   Widget _buildImageSection(String imageUrl) {
-    return Image.network(
+    return Image.asset(
       imageUrl,
       width: double.infinity,
       height: 200,
