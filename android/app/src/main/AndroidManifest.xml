@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     
     <application
-        android:label="uni_option"
+        android:label="UNI-OPTION"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
