@@ -10,8 +10,7 @@ class ApplicationStepsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        for (int i = 0; i < steps.length; i++)
-          _buildStep(context, i, steps[i]),
+        for (int i = 0; i < steps.length; i++) _buildStep(context, i, steps[i]),
       ],
     );
   }
@@ -64,6 +63,7 @@ class ApplicationStepsWidget extends StatelessWidget {
                         'Deadline: ${_formatDate(step.deadline!)}',
                         style: const TextStyle(
                           fontStyle: FontStyle.italic,
+                          color: Colors.red, // Set deadline text to red
                         ),
                       ),
                     ],
