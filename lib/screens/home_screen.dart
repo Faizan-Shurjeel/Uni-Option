@@ -35,22 +35,22 @@ class HomeScreen extends StatelessWidget {
                   shadows: [
                     Shadow(
                       blurRadius: 5,
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.black.withAlpha((0.3 * 255).toInt()),
                       offset: const Offset(0, 1),
                     ),
                   ],
                 ),
               ),
-                background: Stack(
+              background: Stack(
                 fit: StackFit.expand,
                 children: [
                   Container(
-                  alignment: Alignment.center,
-                  child: Icon(
-                    Icons.school_rounded,
-                    size: 100,
-                    color: Colors.white.withOpacity(0.7),
-                  ),
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.school_rounded,
+                      size: 100,
+                      color: Colors.white.withAlpha((0.7 * 255).toInt()),
+                    ),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -58,8 +58,8 @@ class HomeScreen extends StatelessWidget {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          AppTheme.primaryColor.withOpacity(0.4),
-                          AppTheme.primaryColor.withOpacity(0.7),
+                          AppTheme.primaryColor.withAlpha((0.4 * 255).toInt()),
+                          AppTheme.primaryColor.withAlpha((0.7 * 255).toInt()),
                         ],
                       ),
                     ),
@@ -76,7 +76,7 @@ class HomeScreen extends StatelessWidget {
                         shadows: [
                           Shadow(
                             blurRadius: 3,
-                            color: Colors.black.withOpacity(0.3),
+                            color: Colors.black.withAlpha((0.3 * 255).toInt()),
                             offset: const Offset(0, 1),
                           ),
                         ],
@@ -131,7 +131,7 @@ class HomeScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.primaryColor.withOpacity(0.3),
+                color: AppTheme.primaryColor.withAlpha((0.3 * 255).toInt()),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -176,8 +176,8 @@ class HomeScreen extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            theme.colorScheme.primary.withOpacity(0.9),
-            theme.colorScheme.primary.withOpacity(0.7),
+            theme.colorScheme.primary.withValues(alpha: 0.9),
+            theme.colorScheme.primary.withValues(alpha: 0.7),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -185,7 +185,7 @@ class HomeScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.primary.withOpacity(0.3),
+            color: theme.colorScheme.primary.withValues(alpha: 0.3),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -206,7 +206,7 @@ class HomeScreen extends StatelessWidget {
           Text(
             'Your one-stop solution for university information, admission requirements, and application guidance in Pakistan.',
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
           const SizedBox(height: 20),
@@ -297,7 +297,7 @@ class HomeScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(isDark ? 0.2 : 0.1),
+                  color: color.withValues(alpha: isDark ? 0.2 : 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -384,7 +384,7 @@ class HomeScreen extends StatelessWidget {
         color: theme.cardTheme.color,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -423,7 +423,7 @@ class HomeScreen extends StatelessWidget {
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
                           colors: [
-                            Colors.black.withOpacity(0.6),
+                            Colors.black.withValues(alpha: 0.6),
                             Colors.transparent,
                           ],
                         ),
@@ -477,8 +477,8 @@ class HomeScreen extends StatelessWidget {
                           child: Text(
                             university.location,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color:
-                                  theme.colorScheme.onSurface.withOpacity(0.7),
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.7),
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -570,7 +570,7 @@ class HomeScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -582,7 +582,7 @@ class HomeScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(isDark ? 0.2 : 0.1),
+              color: iconColor.withValues(alpha: isDark ? 0.2 : 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -606,7 +606,7 @@ class HomeScreen extends StatelessWidget {
                 Text(
                   description,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
               ],
