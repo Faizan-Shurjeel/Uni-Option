@@ -6,9 +6,24 @@ import '../utils/theme.dart';
 import '../widgets/main_drawer.dart';
 import '../screens/university_list_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import '../models/application_step.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool _isNotificationPanelVisible = false;
+
+  void _toggleNotificationPanel() {
+    setState(() {
+      _isNotificationPanelVisible = !_isNotificationPanelVisible;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,96 +32,109 @@ class HomeScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 200,
-            pinned: true,
-            floating: false,
-            elevation: 0,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                'UNI-OPTION',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: theme.brightness == Brightness.light
-                      ? Colors.white
-                      : Colors.white,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 5,
-                      color: Colors.black.withAlpha((0.3 * 255).toInt()),
-                      offset: const Offset(0, 1),
-                    ),
-                  ],
-                ),
-              ),
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Icons.school_rounded,
-                      size: 100,
-                      color: Colors.white.withAlpha((0.7 * 255).toInt()),
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: 200,
+                pinned: true,
+                floating: false,
+                elevation: 0,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text(
+                    'UNI-OPTION',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: theme.brightness == Brightness.light
+                          ? Colors.white
+                          : Colors.white,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 5,
+                          color: Colors.black.withAlpha((0.3 * 255).toInt()),
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          AppTheme.primaryColor.withAlpha((0.4 * 255).toInt()),
-                          AppTheme.primaryColor.withAlpha((0.7 * 255).toInt()),
-                        ],
+                  background: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.school_rounded,
+                          size: 100,
+                          color: Colors.white.withAlpha((0.7 * 255).toInt()),
+                        ),
                       ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 60,
-                    left: 16,
-                    right: 16,
-                    child: Text(
-                      'Your guide to Pakistani universities',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 3,
-                            color: Colors.black.withAlpha((0.3 * 255).toInt()),
-                            offset: const Offset(0, 1),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              AppTheme.primaryColor
+                                  .withAlpha((0.4 * 255).toInt()),
+                              AppTheme.primaryColor
+                                  .withAlpha((0.7 * 255).toInt()),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                      Positioned(
+                        bottom: 60,
+                        left: 16,
+                        right: 16,
+                        child: Text(
+                          'Your guide to Pakistani universities',
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 3,
+                                color:
+                                    Colors.black.withAlpha((0.3 * 255).toInt()),
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/universities');
+                    },
                   ),
                 ],
               ),
-            ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/universities');
-                },
+              SliverToBoxAdapter(
+                child: _buildWelcomeSection(context),
+              ),
+              SliverToBoxAdapter(
+                child: _buildQuickActionsSection(context),
+              ),
+              SliverToBoxAdapter(
+                child: _buildNotificationSection(context, universityProvider),
+              ),
+              SliverToBoxAdapter(
+                child:
+                    _buildFeaturedUniversitiesSection(context, topUniversities),
+              ),
+              SliverToBoxAdapter(
+                child: _buildAppFeaturesSection(context),
               ),
             ],
           ),
-          SliverToBoxAdapter(
-            child: _buildWelcomeSection(context),
-          ),
-          SliverToBoxAdapter(
-            child: _buildQuickActionsSection(context),
-          ),
-          SliverToBoxAdapter(
-            child: _buildFeaturedUniversitiesSection(context, topUniversities),
-          ),
-          SliverToBoxAdapter(
-            child: _buildAppFeaturesSection(context),
-          ),
+          _buildNotificationPanel(context, universityProvider),
+          _buildNotificationToggleButton(context),
         ],
       ),
       drawer: const MainDrawer(),
@@ -208,6 +236,8 @@ class HomeScreen extends StatelessWidget {
             style: theme.textTheme.bodyLarge?.copyWith(
               color: Colors.white.withValues(alpha: 0.9),
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 20),
           ElevatedButton(
@@ -315,6 +345,229 @@ class HomeScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNotificationSection(
+      BuildContext context, UniversityProvider universityProvider) {
+    final deadlines = universityProvider.getUpcomingDeadlines();
+    if (deadlines.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 8, bottom: 16),
+            child: Text(
+              'Upcoming Deadlines',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+          SizedBox(
+            height: 120,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: deadlines.length > 5 ? 5 : deadlines.length,
+              itemBuilder: (context, index) {
+                final item = deadlines[index];
+                final University university = item['university'];
+                final ApplicationStep step = item['step'];
+                final daysLeft =
+                    step.deadline!.difference(DateTime.now()).inDays;
+
+                return Container(
+                  width: 200,
+                  margin: const EdgeInsets.only(right: 12),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        university.name,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        step.title,
+                        style: Theme.of(context).textTheme.bodySmall,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${DateFormat.yMMMd().format(step.deadline!)} (${daysLeft} days)',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.red.shade600,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotificationToggleButton(BuildContext context) {
+    final theme = Theme.of(context);
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      top: 100,
+      right: _isNotificationPanelVisible ? 250 : 0,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: _toggleNotificationPanel,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            bottomLeft: Radius.circular(16),
+          ),
+          child: Container(
+            width: 40,
+            height: 48,
+            decoration: BoxDecoration(
+              color: theme.cardColor.withOpacity(0.8),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                bottomLeft: Radius.circular(16),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                )
+              ],
+            ),
+            child: Icon(
+              _isNotificationPanelVisible
+                  ? Icons.arrow_forward_ios_rounded
+                  : Icons.notifications,
+              color: theme.colorScheme.primary,
+              size: 20,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNotificationPanel(
+      BuildContext context, UniversityProvider universityProvider) {
+    final theme = Theme.of(context);
+    final deadlines = universityProvider.getUpcomingDeadlines();
+    final panelWidth = 250.0;
+
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      top: 0,
+      bottom: 0,
+      right: _isNotificationPanelVisible ? 0 : -panelWidth,
+      child: Material(
+        elevation: 16,
+        child: Container(
+          width: panelWidth,
+          height: double.infinity,
+          color: theme.scaffoldBackgroundColor,
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: Text(
+                    'Notifications',
+                    style: theme.textTheme.titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const Divider(indent: 16, endIndent: 16),
+                Expanded(
+                  child: deadlines.isEmpty
+                      ? const Center(child: Text('No upcoming deadlines.'))
+                      : ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          itemCount: deadlines.length,
+                          itemBuilder: (context, index) {
+                            final item = deadlines[index];
+                            final University university = item['university'];
+                            final ApplicationStep step = item['step'];
+                            final daysLeft = step.deadline!
+                                .difference(DateTime.now())
+                                .inDays;
+
+                            return Card(
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 6, horizontal: 8),
+                              child: ListTile(
+                                title: Text(
+                                  university.name,
+                                  style: theme.textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      step.title,
+                                      style: theme.textTheme.bodySmall,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '${DateFormat.yMMMd().format(step.deadline!)} ($daysLeft days left)',
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                              color: Colors.red.shade600,
+                                              fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/university-detail',
+                                    arguments: university,
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -523,28 +776,28 @@ class HomeScreen extends StatelessWidget {
             context,
             Icons.school_rounded,
             'Comprehensive University Database',
-            'Access detailed information about universities across Pakistan, including programs, admission criteria, and more.',
+            'Access detailed information about universities across Lahore.',
             Colors.indigo,
           ),
           _buildFeatureCard(
             context,
             Icons.description_rounded,
             'Admission Requirements',
-            'Understand eligibility criteria, required documents, and application processes for different universities.',
+            'Understand eligibility criteria and application processes for different universities.',
             Colors.teal,
           ),
           _buildFeatureCard(
             context,
             Icons.map_rounded,
-            'Interactive Maps',
-            'View university locations, campus facilities, and get directions to visit in person.',
+            'Maps',
+            'View university locations through interactive maps.',
             Colors.amber.shade800,
           ),
           _buildFeatureCard(
             context,
             Icons.bookmark_rounded,
-            'Save & Compare',
-            'Bookmark your favorite universities and compare their programs side by side.',
+            'Save',
+            'Bookmark your favorite universities for easy access later.',
             Colors.purple,
           ),
         ],
@@ -560,38 +813,18 @@ class HomeScreen extends StatelessWidget {
     Color iconColor,
   ) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.cardTheme.color,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20, left: 8, right: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: iconColor.withValues(alpha: isDark ? 0.2 : 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              icon,
-              size: 24,
-              color: iconColor,
-            ),
+          Icon(
+            icon,
+            size: 28,
+            color: iconColor,
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -606,7 +839,7 @@ class HomeScreen extends StatelessWidget {
                 Text(
                   description,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    color: theme.colorScheme.onSurface.withOpacity(0.7),
                   ),
                 ),
               ],

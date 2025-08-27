@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/university.dart';
+import '../models/application_step.dart';
 import '../data/universities_data.dart';
 
 class UniversityProvider extends ChangeNotifier {
@@ -117,5 +118,23 @@ class UniversityProvider extends ChangeNotifier {
 
   void _saveFavorites() {
     _preferences.setStringList('favorites', _favorites);
+  }
+
+  List<Map<String, dynamic>> getUpcomingDeadlines() {
+    final List<Map<String, dynamic>> deadlines = [];
+    for (var university in _universities) {
+      for (var step in university.applicationSteps) {
+        if (step.deadline != null && step.deadline!.isAfter(DateTime.now())) {
+          deadlines.add({
+            'university': university,
+            'step': step,
+          });
+        }
+      }
+    }
+    deadlines.sort((a, b) => (a['step'] as ApplicationStep)
+        .deadline!
+        .compareTo((b['step'] as ApplicationStep).deadline!));
+    return deadlines;
   }
 }
