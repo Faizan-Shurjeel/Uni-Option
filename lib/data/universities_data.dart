@@ -7,7 +7,7 @@ List<University> getUniversitiesData() {
     // 1) FAST NUCES – Lahore (corrected)
     University(
       id: '1',
-      name: 'FAST (NUCES) – Lahore Campus',
+      name: 'FAST (NUCES) - Lahore Campus',
       description:
           'National University of Computer & Emerging Sciences (FAST-NUCES) Lahore Campus; leading private university in computing and engineering.',
       imageUrl: 'assets/images/fast_lahore.png',
@@ -517,10 +517,10 @@ List<University> getUniversitiesData() {
       latitude: 31.5138,
       longitude: 74.3360,
       website: 'https://www.lcwu.edu.pk/',
-      phoneNumber: '042‑99203088',
+      phoneNumber: '042-99203088',
       email: 'info@lcwu.edu.pk',
       eligibilityCriteria:
-          'HSSC or equivalent; programme‑specific entry tests where applicable.',
+          'HSSC or equivalent; programme-specific entry tests where applicable.',
       type: 'Public',
       degrees: [
         Degree(
@@ -573,7 +573,7 @@ List<University> getUniversitiesData() {
       latitude: 31.5200,
       longitude: 74.3200,
       website: 'https://lgu.edu.pk/',
-      phoneNumber: '042‑XXXXXXX',
+      phoneNumber: '042-XXXXXXX',
       email: 'info@lgu.edu.pk',
       eligibilityCriteria:
           'HSSC or equivalent + LGU entrance test as per programme.',
@@ -619,7 +619,7 @@ List<University> getUniversitiesData() {
       latitude: 31.5200,
       longitude: 74.3700,
       website: 'https://www.mul.edu.pk/',
-      phoneNumber: '042‑5169120',
+      phoneNumber: '042-5169120',
       email: 'info@mul.edu.pk',
       eligibilityCriteria:
           'HSSC or equivalent + MUL admission test / as per programme.',
@@ -666,10 +666,10 @@ List<University> getUniversitiesData() {
       latitude: 31.3250,
       longitude: 74.3140,
       website: 'https://www.bnu.edu.pk/',
-      phoneNumber: '042‑XXXXXXX',
+      phoneNumber: '042-XXXXXXX',
       email: 'info@bnu.edu.pk',
       eligibilityCriteria:
-          'HSSC or equivalent; programme‑specific admission tests where applicable.',
+          'HSSC or equivalent; programme-specific admission tests where applicable.',
       type: 'Private',
       degrees: [
         Degree(
@@ -713,7 +713,7 @@ List<University> getUniversitiesData() {
       latitude: 31.5200,
       longitude: 74.3600,
       website: 'https://www.nit.edu.pk/',
-      phoneNumber: '042‑XXXXXXX',
+      phoneNumber: '042-XXXXXXX',
       email: 'info@nit.edu.pk',
       eligibilityCriteria:
           'HSSC or equivalent + NIT admission test / SAT, as per policy.',
@@ -721,11 +721,11 @@ List<University> getUniversitiesData() {
       degrees: [
         Degree(
           id: '1401',
-          name: 'BS Engineering (ASU‑Mirrored)',
+          name: 'BS Engineering (ASU-Mirrored)',
           description:
               'Engineering curriculum modeled after Arizona State University.',
           duration: 4,
-          requirements: ['HSSC (Pre‑Engineering)', 'Admission test/SAT'],
+          requirements: ['HSSC (Pre-Engineering)', 'Admission test/SAT'],
           careerOptions: ['Engineer (various specializations)'],
           fee: 0,
         ),
