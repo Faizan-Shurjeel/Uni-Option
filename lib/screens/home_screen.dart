@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       shadows: [
                         Shadow(
                           blurRadius: 5,
-                          color: Colors.black.withAlpha((0.3 * 255).toInt()),
+                          color: Colors.black.withValues(alpha: 0.3),
                           offset: const Offset(0, 1),
                         ),
                       ],
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Icon(
                           Icons.school_rounded,
                           size: 100,
-                          color: Colors.white.withAlpha((0.7 * 255).toInt()),
+                          color: Colors.white.withValues(alpha: 0.7),
                         ),
                       ),
                       Container(
@@ -75,10 +75,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              AppTheme.primaryColor
-                                  .withAlpha((0.4 * 255).toInt()),
-                              AppTheme.primaryColor
-                                  .withAlpha((0.7 * 255).toInt()),
+                              AppTheme.primaryColor.withValues(alpha: 0.4),
+                              AppTheme.primaryColor.withValues(alpha: 0.7),
                             ],
                           ),
                         ),
@@ -95,8 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             shadows: [
                               Shadow(
                                 blurRadius: 3,
-                                color:
-                                    Colors.black.withAlpha((0.3 * 255).toInt()),
+                                color: Colors.black.withValues(alpha: 0.3),
                                 offset: const Offset(0, 1),
                               ),
                             ],
@@ -159,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.primaryColor.withAlpha((0.3 * 255).toInt()),
+                color: AppTheme.primaryColor.withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -391,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
@@ -417,7 +414,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '${DateFormat.yMMMd().format(step.deadline!)} (${daysLeft} days)',
+                        '${DateFormat.yMMMd().format(step.deadline!)} ($daysLeft days)',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Colors.red.shade600,
                               fontWeight: FontWeight.w600,
@@ -453,14 +450,14 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 40,
             height: 48,
             decoration: BoxDecoration(
-              color: theme.cardColor.withOpacity(0.8),
+              color: theme.cardColor.withValues(alpha: 0.8),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
                 bottomLeft: Radius.circular(16),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 8,
                 )
               ],
