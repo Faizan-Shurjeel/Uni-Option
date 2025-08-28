@@ -52,7 +52,10 @@ class UniversityMapWidget extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         ElevatedButton.icon(
-          icon: const Icon(Icons.directions),
+          icon: const Icon(
+            Icons.directions,
+            color: Colors.white,
+          ),
           label: const Text('View on Google Maps'),
           onPressed: () => _launchMaps(),
         ),
