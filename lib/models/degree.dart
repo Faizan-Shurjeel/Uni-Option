@@ -19,14 +19,38 @@ class Degree {
 
   factory Degree.fromJson(Map<String, dynamic> json) {
     return Degree(
-      id: json['id'],
-      name: json['name'],
+      id: json['id'].toString(),
+      name: json['name'] ?? '',
       description: json['description'] ?? '',
-      duration: json['duration'],
-      requirements: List<String>.from(json['requirements'] ?? []),
-      careerOptions: List<String>.from(json['careerOptions'] ?? []),
-      fee: (json['fee'] ?? 0).toDouble(),
+      duration: _parseInt(json['duration']),
+      requirements: _parseStringList(json['requirements']),
+      careerOptions: _parseStringList(json['career_options']),
+      fee: _parseDouble(json['fee']),
     );
+  }
+
+  static int _parseInt(dynamic value) {
+    if (value == null) return 0;
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? 0;
+    return 0;
+  }
+
+  static double _parseDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
+  }
+
+  static List<String> _parseStringList(dynamic value) {
+    if (value == null) return [];
+    if (value is List) {
+      return value.map((item) => item.toString()).toList();
+    }
+    return [];
   }
 
   Map<String, dynamic> toJson() {

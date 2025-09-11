@@ -1,61 +1,146 @@
 //import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/university.dart';
-import '../models/application_step.dart';
-import '../data/universities_data.dart';
 
-class UniversityProvider extends ChangeNotifier {
+class UniversityProvider with ChangeNotifier {
   List<University> _universities = [];
-  List<String> _favorites = [];
-  final SharedPreferences _preferences;
-  String _searchQuery = '';
-  String _filterProgram = '';
-
+  List<University> _favoriteUniversities = [];
   bool _isLoading = false;
-  String? _errorMessage;
+  String? _error;
+  String _searchQuery = '';
+  String? _filterProgram;
 
-  UniversityProvider(this._preferences) {
-    _loadUniversities();
-    _loadFavorites();
+  List<University> get universities => _universities;
+  List<University> get favoriteUniversities => _favoriteUniversities;
+  bool get isLoading => _isLoading;
+  String? get error => _error;
+  String get searchQuery => _searchQuery;
+  String? get filterProgram => _filterProgram;
+
+  final SupabaseClient _supabase = Supabase.instance.client;
+
+  Future<void> fetchUniversities() async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final response = await _supabase
+          .from('universities')
+          .select('*, degrees(*), application_steps(*)')
+          .order('id');
+
+      if (response.isEmpty) {
+        _universities = [];
+      } else {
+        _universities = (response as List<dynamic>)
+            .map((universityData) => University.fromJson(universityData))
+            .toList();
+      }
+    } catch (e) {
+      _error = 'Failed to fetch universities: ${e.toString()}';
+      _universities = [];
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
-  // Getters for state
-  List<University> get universities => _universities;
-  bool get isLoading => _isLoading;
-  String? get errorMessage => _errorMessage;
+  void toggleFavorite(University university) {
+    if (_favoriteUniversities.contains(university)) {
+      _favoriteUniversities.remove(university);
+    } else {
+      _favoriteUniversities.add(university);
+    }
+    notifyListeners();
+  }
 
-  List<University> get filteredUniversities {
-    if (_searchQuery.isEmpty && _filterProgram.isEmpty) {
+  bool isFavorite(University university) {
+    return _favoriteUniversities.contains(university);
+  }
+
+  List<University> searchUniversities(String query) {
+    if (query.isEmpty) {
       return _universities;
     }
-
     return _universities.where((university) {
-      bool matchesSearch = _searchQuery.isEmpty ||
-          university.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          university.description
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase());
-
-      bool matchesFilter = _filterProgram.isEmpty ||
-          university.programs.any((program) =>
-              program.toLowerCase().contains(_filterProgram.toLowerCase()));
-
-      return matchesSearch && matchesFilter;
+      return university.name.toLowerCase().contains(query.toLowerCase()) ||
+          university.description.toLowerCase().contains(query.toLowerCase()) ||
+          university.programs.any(
+              (program) => program.toLowerCase().contains(query.toLowerCase()));
     }).toList();
   }
 
-  List<University> get favorites {
+  List<University> filterByType(String? type) {
+    if (type == null || type.isEmpty) {
+      return _universities;
+    }
     return _universities
-        .where((university) => _favorites.contains(university.id))
+        .where(
+            (university) => university.type.toLowerCase() == type.toLowerCase())
         .toList();
   }
 
-  // Added getTopUniversities method for the home screen
+  University? getUniversityById(String id) {
+    try {
+      return _universities.firstWhere((university) => university.id == id);
+    } catch (e) {
+      return null;
+    }
+  }
+
   List<University> getTopUniversities(int count) {
-    // For now, simply return the first `count` universities
-    // In a real app, you might sort by rating, popularity, etc.
     return _universities.take(count).toList();
+  }
+
+  List<Map<String, dynamic>> getUpcomingDeadlines() {
+    List<Map<String, dynamic>> deadlines = [];
+
+    for (var university in _universities) {
+      for (var step in university.applicationSteps) {
+        if (step.deadline?.isAfter(DateTime.now()) == true) {
+          deadlines.add({
+            'university': university.name,
+            'step': step.title,
+            'deadline': step.deadline,
+          });
+        }
+      }
+    }
+
+    // Sort by deadline
+    deadlines.sort((a, b) => a['deadline'].compareTo(b['deadline']));
+
+    return deadlines.take(5).toList(); // Return top 5 upcoming deadlines
+  }
+
+  List<University> get filteredUniversities {
+    List<University> filtered = _universities;
+
+    // Apply search filter
+    if (_searchQuery.isNotEmpty) {
+      filtered = filtered.where((university) {
+        return university.name
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()) ||
+            university.description
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()) ||
+            university.programs.any((program) =>
+                program.toLowerCase().contains(_searchQuery.toLowerCase()));
+      }).toList();
+    }
+
+    // Apply program filter
+    if (_filterProgram != null && _filterProgram!.isNotEmpty) {
+      filtered = filtered
+          .where((university) => university.programs.any((program) =>
+              program.toLowerCase().contains(_filterProgram!.toLowerCase())))
+          .toList();
+    }
+
+    return filtered;
   }
 
   void setSearchQuery(String query) {
@@ -63,78 +148,14 @@ class UniversityProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setFilterProgram(String program) {
+  void setFilterProgram(String? program) {
     _filterProgram = program;
     notifyListeners();
   }
 
-  bool isFavorite(String universityId) {
-    return _favorites.contains(universityId);
-  }
-
-  void toggleFavorite(String universityId) {
-    if (_favorites.contains(universityId)) {
-      _favorites.remove(universityId);
-    } else {
-      _favorites.add(universityId);
-    }
-    _saveFavorites();
+  void clearFilters() {
+    _searchQuery = '';
+    _filterProgram = null;
     notifyListeners();
-  }
-
-  University? getUniversityById(String id) {
-    try {
-      return _universities.firstWhere((uni) => uni.id == id);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Future<void> _loadUniversities() async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
-
-    try {
-      _universities = getUniversitiesData();
-      _isLoading = false;
-    } catch (e) {
-      _errorMessage = "Failed to load university data: ${e.toString()}";
-      _isLoading = false;
-    }
-    notifyListeners();
-  }
-
-  Future<void> reloadUniversities() async {
-    await _loadUniversities();
-  }
-
-  void _loadFavorites() {
-    final favoritesJson = _preferences.getStringList('favorites');
-    if (favoritesJson != null) {
-      _favorites = favoritesJson;
-    }
-  }
-
-  void _saveFavorites() {
-    _preferences.setStringList('favorites', _favorites);
-  }
-
-  List<Map<String, dynamic>> getUpcomingDeadlines() {
-    final List<Map<String, dynamic>> deadlines = [];
-    for (var university in _universities) {
-      for (var step in university.applicationSteps) {
-        if (step.deadline != null && step.deadline!.isAfter(DateTime.now())) {
-          deadlines.add({
-            'university': university,
-            'step': step,
-          });
-        }
-      }
-    }
-    deadlines.sort((a, b) => (a['step'] as ApplicationStep)
-        .deadline!
-        .compareTo((b['step'] as ApplicationStep).deadline!));
-    return deadlines;
   }
 }

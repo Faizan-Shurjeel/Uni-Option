@@ -11,12 +11,22 @@ class ApplicationStep {
 
   factory ApplicationStep.fromJson(Map<String, dynamic> json) {
     return ApplicationStep(
-      title: json['title'],
+      title: json['title'] ?? '',
       description: json['description'] ?? '',
-      deadline: json['deadline'] != null 
-          ? DateTime.parse(json['deadline']) 
-          : null,
+      deadline: _parseDateTime(json['deadline']),
     );
+  }
+
+  static DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is String) {
+      try {
+        return DateTime.parse(value);
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
   }
 
   Map<String, dynamic> toJson() {

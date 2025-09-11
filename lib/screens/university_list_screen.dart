@@ -21,7 +21,13 @@ class _UniversityListScreenState extends State<UniversityListScreen> {
   @override
   void initState() {
     super.initState();
-    // Defer initialization to didChangeDependencies
+    // Fetch universities if not already loaded
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = context.read<UniversityProvider>();
+      if (provider.universities.isEmpty && !provider.isLoading) {
+        provider.fetchUniversities();
+      }
+    });
   }
 
   @override
@@ -61,13 +67,54 @@ class _UniversityListScreenState extends State<UniversityListScreen> {
         title: const Text('Universities'),
       ),
       drawer: const MainDrawer(),
-      body: Column(
-        children: [
-          _buildSearchAndFilterSection(),
-          Expanded(
-            child: _buildUniversitiesList(),
-          ),
-        ],
+      body: Consumer<UniversityProvider>(
+        builder: (context, universityProvider, child) {
+          if (universityProvider.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (universityProvider.error != null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: Colors.red[400],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Error loading universities',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    universityProvider.error!,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => universityProvider.fetchUniversities(),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return Column(
+            children: [
+              _buildSearchAndFilterSection(),
+              Expanded(
+                child: _buildUniversitiesList(universityProvider),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -127,24 +174,20 @@ class _UniversityListScreenState extends State<UniversityListScreen> {
     );
   }
 
-  Widget _buildUniversitiesList() {
-    return Consumer<UniversityProvider>(
-      builder: (context, provider, child) {
-        final universities = provider.filteredUniversities;
+  Widget _buildUniversitiesList(UniversityProvider provider) {
+    final universities = provider.filteredUniversities;
 
-        if (universities.isEmpty) {
-          return const Center(
-            child: Text('No universities found matching your criteria'),
-          );
-        }
+    if (universities.isEmpty) {
+      return const Center(
+        child: Text('No universities found matching your criteria'),
+      );
+    }
 
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: universities.length,
-          itemBuilder: (context, index) {
-            return UniversityCard(university: universities[index]);
-          },
-        );
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: universities.length,
+      itemBuilder: (context, index) {
+        return UniversityCard(university: universities[index]);
       },
     );
   }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-//import 'models/university.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'providers/theme_provider.dart';
 import 'providers/university_provider.dart';
-import 'providers/theme_provider.dart'; // Import ThemeProvider
+import 'models/university.dart';
 import 'screens/splash_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/university_list_screen.dart';
@@ -15,14 +15,16 @@ import 'utils/theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize shared preferences
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await Supabase.initialize(
+    url: 'https://bjggezqfnrqcuasofqve.supabase.co',
+    anonKey: 'sb_publishable_YVQDJAeHHL-o4HDxmc6PEQ_y88pgNsE',
+  );
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => UniversityProvider(prefs),
+          create: (_) => UniversityProvider(),
         ),
         ChangeNotifierProvider(
           // Add ThemeProvider
@@ -55,7 +57,11 @@ class UniOptionApp extends StatelessWidget {
         '/universities': (context) => const UniversityListScreen(),
         '/favorites': (context) => const FavoritesScreen(),
         '/settings': (context) => const SettingsScreen(),
-        '/university-detail': (context) => const UniversityDetailScreen(),
+        '/university-detail': (context) {
+          final university =
+              ModalRoute.of(context)!.settings.arguments as University;
+          return UniversityDetailScreen(university: university);
+        },
       },
     );
   }

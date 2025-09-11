@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import '../models/university.dart';
 import '../providers/university_provider.dart';
 import '../utils/theme.dart';
 import '../widgets/main_drawer.dart';
 import '../screens/university_list_screen.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import '../models/application_step.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,167 +26,229 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final universityProvider = Provider.of<UniversityProvider>(context);
-    final topUniversities = universityProvider.getTopUniversities(6);
-    final theme = Theme.of(context);
+  void initState() {
+    super.initState();
+    // Fetch universities when the home screen initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<UniversityProvider>().fetchUniversities();
+    });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                expandedHeight: 200,
-                pinned: true,
-                floating: false,
-                elevation: 0,
-                flexibleSpace: FlexibleSpaceBar(
-                  title: Text(
-                    'UNI-OPTION',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: theme.brightness == Brightness.light
-                          ? Colors.white
-                          : Colors.white,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 5,
-                          color: Colors.black.withValues(alpha: 0.3),
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
+      body: Consumer<UniversityProvider>(
+        builder: (context, universityProvider, child) {
+          if (universityProvider.isLoading) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Loading universities...'),
+                ],
+              ),
+            );
+          }
+
+          if (universityProvider.error != null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: Colors.red[400],
                   ),
-                  background: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Container(
-                        alignment: Alignment.center,
-                        child: Icon(
-                          Icons.school_rounded,
-                          size: 100,
-                          color: Colors.white.withValues(alpha: 0.7),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              AppTheme.primaryColor.withValues(alpha: 0.4),
-                              AppTheme.primaryColor.withValues(alpha: 0.7),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 60,
-                        left: 16,
-                        right: 16,
-                        child: Text(
-                          'Your guide to Pakistani universities',
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
+                  const SizedBox(height: 16),
+                  Text(
+                    'Error loading data',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    universityProvider.error!,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => universityProvider.fetchUniversities(),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final topUniversities = universityProvider.getTopUniversities(6);
+          final theme = Theme.of(context);
+
+          return Scaffold(
+            body: Stack(
+              children: [
+                CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      expandedHeight: 200,
+                      pinned: true,
+                      floating: false,
+                      elevation: 0,
+                      flexibleSpace: FlexibleSpaceBar(
+                        title: Text(
+                          'UNI-OPTION',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: theme.brightness == Brightness.light
+                                ? Colors.white
+                                : Colors.white,
                             shadows: [
                               Shadow(
-                                blurRadius: 3,
+                                blurRadius: 5,
                                 color: Colors.black.withValues(alpha: 0.3),
                                 offset: const Offset(0, 1),
                               ),
                             ],
                           ),
                         ),
+                        background: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.school_rounded,
+                                size: 100,
+                                color: Colors.white.withValues(alpha: 0.7),
+                              ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    AppTheme.primaryColor
+                                        .withValues(alpha: 0.4),
+                                    AppTheme.primaryColor
+                                        .withValues(alpha: 0.7),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 60,
+                              left: 16,
+                              right: 16,
+                              child: Text(
+                                'Your guide to Pakistani universities',
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  shadows: [
+                                    Shadow(
+                                      blurRadius: 3,
+                                      color:
+                                          Colors.black.withValues(alpha: 0.3),
+                                      offset: const Offset(0, 1),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/universities');
-                    },
-                  ),
-                ],
-              ),
-              SliverToBoxAdapter(
-                child: _buildWelcomeSection(context),
-              ),
-              SliverToBoxAdapter(
-                child: _buildQuickActionsSection(context),
-              ),
-              SliverToBoxAdapter(
-                child: _buildNotificationSection(context, universityProvider),
-              ),
-              SliverToBoxAdapter(
-                child:
-                    _buildFeaturedUniversitiesSection(context, topUniversities),
-              ),
-              SliverToBoxAdapter(
-                child: _buildAppFeaturesSection(context),
-              ),
-            ],
-          ),
-          _buildNotificationPanel(context, universityProvider),
-          _buildNotificationToggleButton(context),
-        ],
-      ),
-      drawer: const MainDrawer(),
-      floatingActionButton: OpenContainer(
-        transitionDuration: const Duration(milliseconds: 500),
-        openBuilder: (context, _) => const UniversityListScreen(),
-        closedShape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16)),
-        ),
-        closedBuilder: (context, openContainer) => Container(
-          width: 140,
-          height: 56,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppTheme.primaryColor,
-                AppTheme.secondaryColor,
-              ],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.primaryColor.withValues(alpha: 0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: openContainer,
-              borderRadius: BorderRadius.circular(16),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.school, color: Colors.white),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Explore',
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      actions: [
+                        IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/universities');
+                          },
+                        ),
+                      ],
+                    ),
+                    SliverToBoxAdapter(
+                      child: _buildWelcomeSection(context),
+                    ),
+                    SliverToBoxAdapter(
+                      child: _buildQuickActionsSection(context),
+                    ),
+                    SliverToBoxAdapter(
+                      child: _buildNotificationSection(
+                          context, universityProvider),
+                    ),
+                    SliverToBoxAdapter(
+                      child: _buildFeaturedUniversitiesSection(
+                          context, topUniversities),
+                    ),
+                    SliverToBoxAdapter(
+                      child: _buildAppFeaturesSection(context),
                     ),
                   ],
                 ),
+                _buildNotificationPanel(context, universityProvider),
+                _buildNotificationToggleButton(context),
+              ],
+            ),
+            drawer: const MainDrawer(),
+            floatingActionButton: OpenContainer(
+              transitionDuration: const Duration(milliseconds: 500),
+              openBuilder: (context, _) => const UniversityListScreen(),
+              closedShape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+              ),
+              closedBuilder: (context, openContainer) => Container(
+                width: 140,
+                height: 56,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppTheme.primaryColor,
+                      AppTheme.secondaryColor,
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: openContainer,
+                    borderRadius: BorderRadius.circular(16),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.school, color: Colors.white),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Explore',
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

@@ -16,7 +16,7 @@ class UniversityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<UniversityProvider>(context);
-    final isFavorite = provider.isFavorite(university.id);
+    final isFavorite = provider.isFavorite(university);
     final theme = Theme.of(context);
 
     return Container(
@@ -118,7 +118,7 @@ class UniversityCard extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          provider.toggleFavorite(university.id);
+                          provider.toggleFavorite(university);
                         },
                       ),
                     ),

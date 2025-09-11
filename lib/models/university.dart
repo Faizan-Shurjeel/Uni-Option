@@ -42,29 +42,61 @@ class University {
 
   factory University.fromJson(Map<String, dynamic> json) {
     return University(
-      id: json['id'],
-      name: json['name'],
+      id: json['id'].toString(),
+      name: json['name'] ?? '',
       description: json['description'] ?? '',
-      imageUrl: json['imageUrl'] ?? '',
+      imageUrl: json['image_url'] ?? '',
       address: json['address'] ?? '',
-      latitude: (json['latitude'] ?? 0.0).toDouble(),
-      longitude: (json['longitude'] ?? 0.0).toDouble(),
+      latitude: _parseDouble(json['latitude']),
+      longitude: _parseDouble(json['longitude']),
       website: json['website'] ?? '',
-      phoneNumber: json['phoneNumber'] ?? '',
+      phoneNumber: json['phone_number'] ?? '',
       email: json['email'] ?? '',
-      eligibilityCriteria: json['eligibilityCriteria'] ?? '',
-      degrees: (json['degrees'] as List?)
-              ?.map((degree) => Degree.fromJson(degree))
-              .toList() ??
-          [],
-      applicationSteps: (json['applicationSteps'] as List?)
-              ?.map((step) => ApplicationStep.fromJson(step))
-              .toList() ??
-          [],
-      location: json['location'],
-      programs: (json['programs'] as List?)?.cast<String>() ?? [],
-      type: json['type'] ?? 'University',
+      eligibilityCriteria: json['eligibility_criteria'] ?? '',
+      type: json['type'] ?? '',
+      degrees: _parseDegrees(json['degrees']),
+      applicationSteps: _parseApplicationSteps(json['application_steps']),
+      programs: _parsePrograms(json['programs']),
     );
+  }
+
+  static double _parseDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
+  }
+
+  static List<Degree> _parseDegrees(dynamic degrees) {
+    if (degrees == null) return [];
+    if (degrees is! List) return [];
+    return degrees
+        .map((degree) =>
+            degree is Map<String, dynamic> ? Degree.fromJson(degree) : null)
+        .where((degree) => degree != null)
+        .cast<Degree>()
+        .toList();
+  }
+
+  static List<ApplicationStep> _parseApplicationSteps(dynamic steps) {
+    if (steps == null) return [];
+    if (steps is! List) return [];
+    return steps
+        .map((step) => step is Map<String, dynamic>
+            ? ApplicationStep.fromJson(step)
+            : null)
+        .where((step) => step != null)
+        .cast<ApplicationStep>()
+        .toList();
+  }
+
+  static List<String> _parsePrograms(dynamic programs) {
+    if (programs == null) return [];
+    if (programs is List) {
+      return programs.map((program) => program.toString()).toList();
+    }
+    return [];
   }
 
   Map<String, dynamic> toJson() {
