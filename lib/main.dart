@@ -10,6 +10,8 @@ import 'screens/university_list_screen.dart';
 import 'screens/university_detail_screen.dart';
 import 'screens/favorites_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/admin/admin_login_screen.dart';
+import 'screens/admin/admin_panel_screen.dart';
 import 'utils/theme.dart';
 
 void main() async {
@@ -57,6 +59,8 @@ class UniOptionApp extends StatelessWidget {
         '/universities': (context) => const UniversityListScreen(),
         '/favorites': (context) => const FavoritesScreen(),
         '/settings': (context) => const SettingsScreen(),
+        '/admin': (context) => const AdminLoginScreen(),
+        '/admin-panel': (context) => const AdminPanelScreen(),
         '/university-detail': (context) {
           final university =
               ModalRoute.of(context)!.settings.arguments as University;

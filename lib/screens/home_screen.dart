@@ -87,6 +87,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('UNI-OPTION'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.admin_panel_settings),
+            tooltip: 'Admin Panel',
+            onPressed: () {
+              Navigator.pushNamed(context, '/admin');
+            },
+          ),
+        ],
+      ),
       body: Consumer<UniversityProvider>(
         builder: (context, universityProvider, child) {
           if (universityProvider.isLoading) {
