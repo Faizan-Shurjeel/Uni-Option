@@ -25,6 +25,56 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // Add sample notifications
+  List<Map<String, dynamic>> _getSampleNotifications() {
+    return [
+      {
+        'type': 'announcement',
+        'title': 'New Universities Added',
+        'message': '5 new universities have been added to our database',
+        'time': DateTime.now().subtract(const Duration(hours: 2)),
+        'icon': Icons.school,
+        'color': Colors.blue,
+      },
+      {
+        'type': 'reminder',
+        'title': 'Application Tips',
+        'message':
+            'Remember to submit your documents early to avoid last-minute issues',
+        'time': DateTime.now().subtract(const Duration(hours: 5)),
+        'icon': Icons.lightbulb,
+        'color': Colors.orange,
+      },
+      {
+        'type': 'update',
+        'title': 'Fee Structure Updated',
+        'message':
+            'University of Punjab has updated their fee structure for 2024',
+        'time': DateTime.now().subtract(const Duration(days: 1)),
+        'icon': Icons.update,
+        'color': Colors.green,
+      },
+      {
+        'type': 'alert',
+        'title': 'Merit List Released',
+        'message':
+            'LUMS has released their first merit list. Check if you qualify!',
+        'time': DateTime.now().subtract(const Duration(days: 2)),
+        'icon': Icons.announcement,
+        'color': Colors.red,
+      },
+      {
+        'type': 'info',
+        'title': 'Scholarship Opportunity',
+        'message':
+            'New scholarship programs available for engineering students',
+        'time': DateTime.now().subtract(const Duration(days: 3)),
+        'icon': Icons.star,
+        'color': Colors.purple,
+      },
+    ];
+  }
+
   @override
   void initState() {
     super.initState();
@@ -541,6 +591,7 @@ class _HomeScreenState extends State<HomeScreen> {
       BuildContext context, UniversityProvider universityProvider) {
     final theme = Theme.of(context);
     final deadlines = universityProvider.getUpcomingDeadlines();
+    final notifications = _getSampleNotifications();
     final panelWidth = 250.0;
 
     return AnimatedPositioned(
@@ -569,61 +620,149 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const Divider(indent: 16, endIndent: 16),
                 Expanded(
-                  child: deadlines.isEmpty
-                      ? const Center(child: Text('No upcoming deadlines.'))
-                      : ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          itemCount: deadlines.length,
-                          itemBuilder: (context, index) {
-                            final item = deadlines[index];
-                            final University university = item['university'];
-                            final ApplicationStep step = item['step'];
-                            final daysLeft = step.deadline!
-                                .difference(DateTime.now())
-                                .inDays;
+                  child: ListView(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    children: [
+                      // Deadline notifications section
+                      if (deadlines.isNotEmpty) ...[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                          child: Text(
+                            'Upcoming Deadlines',
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                        ...deadlines.map((item) {
+                          final University university = item['university'];
+                          final ApplicationStep step = item['step'];
+                          final daysLeft =
+                              step.deadline!.difference(DateTime.now()).inDays;
 
-                            return Card(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 6, horizontal: 8),
-                              child: ListTile(
-                                title: Text(
-                                  university.name,
-                                  style: theme.textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
+                          return Card(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 4, horizontal: 8),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.red.withOpacity(0.1),
+                                child: Icon(
+                                  Icons.schedule,
+                                  color: Colors.red.shade600,
+                                  size: 16,
+                                ),
+                              ),
+                              title: Text(
+                                university.name,
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    step.title,
+                                    style: theme.textTheme.bodySmall,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '$daysLeft days left',
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                        color: Colors.red.shade600,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/university-detail',
+                                  arguments: university,
+                                );
+                              },
+                            ),
+                          );
+                        }).toList(),
+                        const SizedBox(height: 16),
+                      ],
+
+                      // General notifications section
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                        child: Text(
+                          'Recent Updates',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                      ...notifications.map((notification) {
+                        return Card(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 4, horizontal: 8),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: (notification['color'] as Color)
+                                  .withOpacity(0.1),
+                              child: Icon(
+                                notification['icon'] as IconData,
+                                color: notification['color'] as Color,
+                                size: 16,
+                              ),
+                            ),
+                            title: Text(
+                              notification['title'] as String,
+                              style: theme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 4),
+                                Text(
+                                  notification['message'] as String,
+                                  style: theme.textTheme.bodySmall,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      step.title,
-                                      style: theme.textTheme.bodySmall,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      '${DateFormat.yMMMd().format(step.deadline!)} ($daysLeft days left)',
-                                      style: theme.textTheme.bodySmall
-                                          ?.copyWith(
-                                              color: Colors.red.shade600,
-                                              fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
+                                const SizedBox(height: 4),
+                                Text(
+                                  _getTimeAgo(notification['time'] as DateTime),
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurface
+                                        .withOpacity(0.6),
+                                  ),
                                 ),
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    '/university-detail',
-                                    arguments: university,
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        ),
+                              ],
+                            ),
+                            onTap: () {
+                              // Handle notification tap
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text(notification['message'] as String),
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -631,6 +770,21 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  String _getTimeAgo(DateTime dateTime) {
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+
+    if (difference.inDays > 0) {
+      return '${difference.inDays} day${difference.inDays > 1 ? 's' : ''} ago';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours} hour${difference.inHours > 1 ? 's' : ''} ago';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes} minute${difference.inMinutes > 1 ? 's' : ''} ago';
+    } else {
+      return 'Just now';
+    }
   }
 
   Widget _buildFeaturedUniversitiesSection(
