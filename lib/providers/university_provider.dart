@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/university.dart';
+import '../services/notification_service.dart';
 
 class UniversityProvider with ChangeNotifier {
   List<University> _universities = [];
@@ -21,6 +22,7 @@ class UniversityProvider with ChangeNotifier {
   String? get filterProgram => _filterProgram;
 
   final SupabaseClient _supabase = Supabase.instance.client;
+  final NotificationService _notificationService = NotificationService();
 
   UniversityProvider() {
     _loadFavorites();
@@ -92,8 +94,14 @@ class UniversityProvider with ChangeNotifier {
     final isExist = _favorites.any((element) => element.id == university.id);
     if (isExist) {
       _favorites.removeWhere((element) => element.id == university.id);
+      _notificationService.showUnfavoriteNotification(
+        universityName: university.name,
+      );
     } else {
       _favorites.add(university);
+      _notificationService.showFavoriteNotification(
+        universityName: university.name,
+      );
     }
     _saveFavorites(); // Save after every change
     notifyListeners();

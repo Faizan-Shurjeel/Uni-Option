@@ -13,6 +13,7 @@ import 'screens/settings_screen.dart';
 import 'screens/admin/admin_login_screen.dart';
 import 'screens/admin/admin_panel_screen.dart';
 import 'utils/theme.dart';
+import 'services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,9 @@ void main() async {
     url: 'https://tbspmsavattbzcdjbhhi.supabase.co',
     anonKey: 'sb_publishable_ZIhKj_0i8_PMASlTpCamvA_Qp91IAb9',
   );
+
+  // Initialize notifications
+  await NotificationService().initialize();
 
   runApp(
     MultiProvider(
