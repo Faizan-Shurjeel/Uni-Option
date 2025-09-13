@@ -80,7 +80,10 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     // Fetch universities when the home screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<UniversityProvider>().fetchUniversities();
+      final provider = context.read<UniversityProvider>();
+      provider.fetchUniversities();
+      // Check for deadline reminders when app opens
+      provider.checkDeadlineReminders();
     });
   }
 
@@ -485,7 +488,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 8, bottom: 16),
             child: Text(
-              'Upcoming Deadlines',
+              'Deadline Notifications',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -500,15 +503,35 @@ class _HomeScreenState extends State<HomeScreen> {
                 final item = deadlines[index];
                 final University university = item['university'];
                 final ApplicationStep step = item['step'];
-                final daysLeft =
-                    step.deadline!.difference(DateTime.now()).inDays;
+                final int daysLeft = item['daysLeft'];
+                final bool isPast = item['isPast'];
+
+                Color cardColor = Theme.of(context).cardColor;
+                Color textColor = Colors.red.shade600;
+                String statusText;
+
+                if (isPast) {
+                  cardColor = Colors.grey.shade100;
+                  textColor = Colors.grey.shade600;
+                  statusText = '${daysLeft.abs()} days ago';
+                } else if (daysLeft == 0) {
+                  cardColor = Colors.red.shade50;
+                  textColor = Colors.red.shade700;
+                  statusText = 'Today!';
+                } else if (daysLeft <= 3) {
+                  cardColor = Colors.orange.shade50;
+                  textColor = Colors.orange.shade700;
+                  statusText = '$daysLeft days left';
+                } else {
+                  statusText = '$daysLeft days left';
+                }
 
                 return Container(
                   width: 200,
                   margin: const EdgeInsets.only(right: 12),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
+                    color: cardColor,
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
@@ -521,13 +544,31 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        university.name,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              university.name,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                          ),
+                          if (isPast)
+                            Icon(Icons.history,
+                                size: 16, color: Colors.grey.shade600)
+                          else if (daysLeft <= 3)
+                            Icon(Icons.warning,
+                                size: 16, color: Colors.orange.shade700)
+                          else
+                            Icon(Icons.schedule,
+                                size: 16, color: Colors.blue.shade600),
+                        ],
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -538,9 +579,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '${DateFormat.yMMMd().format(step.deadline!)} ($daysLeft days)',
+                        '${DateFormat.yMMMd().format(step.deadline!)} ($statusText)',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.red.shade600,
+                              color: textColor,
                               fontWeight: FontWeight.w600,
                             ),
                       ),
@@ -702,7 +743,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                             ),
                           );
-                        }).toList(),
+                        }),
                         const SizedBox(height: 16),
                       ],
 
@@ -772,7 +813,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             },
                           ),
                         );
-                      }).toList(),
+                      }),
                     ],
                   ),
                 ),

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -14,6 +15,7 @@ import 'screens/admin/admin_login_screen.dart';
 import 'screens/admin/admin_panel_screen.dart';
 import 'utils/theme.dart';
 import 'services/notification_service.dart';
+import 'services/deadline_reminder_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,8 +25,28 @@ void main() async {
     anonKey: 'sb_publishable_ZIhKj_0i8_PMASlTpCamvA_Qp91IAb9',
   );
 
-  // Initialize notifications
-  await NotificationService().initialize();
+  // Initialize services with error handling
+  try {
+    await NotificationService().initialize();
+    if (kDebugMode) {
+      print('NotificationService initialized successfully');
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('NotificationService initialization failed: $e');
+    }
+  }
+
+  try {
+    await DeadlineReminderService().initialize();
+    if (kDebugMode) {
+      print('DeadlineReminderService initialized successfully');
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('DeadlineReminderService initialization failed: $e');
+    }
+  }
 
   runApp(
     MultiProvider(

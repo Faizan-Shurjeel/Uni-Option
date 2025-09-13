@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import '../models/university.dart';
 import '../providers/university_provider.dart';
 import '../widgets/contact_info_widget.dart';
@@ -10,8 +11,7 @@ import '../widgets/university_map_widget.dart';
 class UniversityDetailScreen extends StatelessWidget {
   final University university;
 
-  const UniversityDetailScreen({Key? key, required this.university})
-      : super(key: key);
+  const UniversityDetailScreen({super.key, required this.university});
 
   @override
   Widget build(BuildContext context) {
@@ -131,13 +131,17 @@ class UniversityDetailScreen extends StatelessWidget {
             // Application Steps
             if (university.applicationSteps.isNotEmpty) ...[
               Text(
-                'Application Process',
+                'Application Process & Deadlines',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
               const SizedBox(height: 8),
               ApplicationStepsWidget(steps: university.applicationSteps),
+
+              // Add deadline summary
+              const SizedBox(height: 16),
+              _buildDeadlineSummary(context, university),
               const SizedBox(height: 24),
             ],
 
@@ -169,6 +173,107 @@ class UniversityDetailScreen extends StatelessWidget {
                 longitude: university.longitude,
                 universityName: university.name,
               ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDeadlineSummary(BuildContext context, University university) {
+    final now = DateTime.now();
+    final upcomingDeadlines = university.applicationSteps
+        .where((step) => step.deadline != null && step.deadline!.isAfter(now))
+        .toList();
+
+    final pastDeadlines = university.applicationSteps
+        .where((step) => step.deadline != null && step.deadline!.isBefore(now))
+        .toList();
+
+    if (upcomingDeadlines.isEmpty && pastDeadlines.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Deadline Summary',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 12),
+            if (upcomingDeadlines.isNotEmpty) ...[
+              Text(
+                'Upcoming Deadlines:',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.green.shade700,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              ...upcomingDeadlines.map((step) {
+                final daysLeft = step.deadline!.difference(now).inDays;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.schedule,
+                        size: 16,
+                        color: daysLeft <= 7 ? Colors.red : Colors.blue,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          '${step.title}: ${DateFormat.yMMMd().format(step.deadline!)} ($daysLeft days)',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+              const SizedBox(height: 16),
+            ],
+            if (pastDeadlines.isNotEmpty) ...[
+              Text(
+                'Recent Past Deadlines:',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade600,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              ...pastDeadlines.take(3).map((step) {
+                final daysPast = now.difference(step.deadline!).inDays;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.history,
+                        size: 16,
+                        color: Colors.grey.shade600,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          '${step.title}: ${DateFormat.yMMMd().format(step.deadline!)} ($daysPast days ago)',
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Colors.grey.shade600,
+                                  ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
             ],
           ],
         ),

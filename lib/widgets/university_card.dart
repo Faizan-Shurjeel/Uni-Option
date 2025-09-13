@@ -19,6 +19,11 @@ class UniversityCard extends StatelessWidget {
     final isFavorite = provider.isFavorite(university);
     final theme = Theme.of(context);
 
+    // Get upcoming deadlines for this university if it's favorited
+    final upcomingDeadlines = isFavorite
+        ? _getUpcomingDeadlines(university)
+        : <Map<String, dynamic>>[];
+
     return Container(
       margin: const EdgeInsets.only(bottom: 20, left: 16, right: 16),
       decoration: BoxDecoration(
@@ -150,6 +155,48 @@ class UniversityCard extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                  // Deadline indicator for favorited universities
+                  if (isFavorite && upcomingDeadlines.isNotEmpty)
+                    Positioned(
+                      bottom: 8,
+                      left: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: _getDeadlineColor(
+                              upcomingDeadlines.first['daysLeft']),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.schedule,
+                              size: 12,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              _getDeadlineText(
+                                  upcomingDeadlines.first['daysLeft']),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                 ],
               ),
               Padding(
@@ -269,5 +316,51 @@ class UniversityCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<Map<String, dynamic>> _getUpcomingDeadlines(University university) {
+    final now = DateTime.now();
+    List<Map<String, dynamic>> deadlines = [];
+
+    for (final step in university.applicationSteps) {
+      if (step.deadline == null) continue;
+
+      final daysLeft = step.deadline!.difference(now).inDays;
+
+      // Only include upcoming deadlines (next 30 days)
+      if (daysLeft >= 0 && daysLeft <= 30) {
+        deadlines.add({
+          'title': step.title,
+          'deadline': step.deadline,
+          'daysLeft': daysLeft,
+        });
+      }
+    }
+
+    // Sort by closest deadline first
+    deadlines
+        .sort((a, b) => (a['daysLeft'] as int).compareTo(b['daysLeft'] as int));
+
+    return deadlines;
+  }
+
+  Color _getDeadlineColor(int daysLeft) {
+    if (daysLeft <= 3) {
+      return Colors.red.shade600;
+    } else if (daysLeft <= 7) {
+      return Colors.orange.shade600;
+    } else {
+      return Colors.blue.shade600;
+    }
+  }
+
+  String _getDeadlineText(int daysLeft) {
+    if (daysLeft == 0) {
+      return 'Today!';
+    } else if (daysLeft == 1) {
+      return '1 day';
+    } else {
+      return '$daysLeft days';
+    }
   }
 }

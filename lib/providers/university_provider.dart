@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/university.dart';
 import '../services/notification_service.dart';
+import '../services/deadline_reminder_service.dart';
 
 class UniversityProvider with ChangeNotifier {
   List<University> _universities = [];
@@ -23,9 +24,15 @@ class UniversityProvider with ChangeNotifier {
 
   final SupabaseClient _supabase = Supabase.instance.client;
   final NotificationService _notificationService = NotificationService();
+  final DeadlineReminderService _deadlineService = DeadlineReminderService();
 
   UniversityProvider() {
     _loadFavorites();
+    _initializeDeadlineService();
+  }
+
+  Future<void> _initializeDeadlineService() async {
+    await _deadlineService.initialize();
   }
 
   Future<void> fetchUniversities() async {
@@ -103,12 +110,34 @@ class UniversityProvider with ChangeNotifier {
         universityName: university.name,
       );
     }
-    _saveFavorites(); // Save after every change
+    _saveFavorites();
+
+    // Check deadlines when favorites change
+    _checkDeadlineReminders();
+
     notifyListeners();
   }
 
   bool isFavorite(University university) {
     return _favorites.any((element) => element.id == university.id);
+  }
+
+  Future<void> checkDeadlineReminders() async {
+    await _deadlineService.checkAndSendDeadlineReminders(_favorites);
+  }
+
+  Future<void> _checkDeadlineReminders() async {
+    try {
+      await _deadlineService.checkAndSendDeadlineReminders(_favorites);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error checking deadline reminders: $e');
+      }
+    }
+  }
+
+  List<Map<String, dynamic>> getUpcomingDeadlines() {
+    return _deadlineService.getUpcomingDeadlines(_favorites);
   }
 
   List<University> searchUniversities(String query) {
@@ -143,27 +172,6 @@ class UniversityProvider with ChangeNotifier {
 
   List<University> getTopUniversities(int count) {
     return _universities.take(count).toList();
-  }
-
-  List<Map<String, dynamic>> getUpcomingDeadlines() {
-    List<Map<String, dynamic>> deadlines = [];
-
-    for (var university in _universities) {
-      for (var step in university.applicationSteps) {
-        if (step.deadline?.isAfter(DateTime.now()) == true) {
-          deadlines.add({
-            'university': university.name,
-            'step': step.title,
-            'deadline': step.deadline,
-          });
-        }
-      }
-    }
-
-    // Sort by deadline
-    deadlines.sort((a, b) => a['deadline'].compareTo(b['deadline']));
-
-    return deadlines.take(5).toList(); // Return top 5 upcoming deadlines
   }
 
   List<University> get filteredUniversities {

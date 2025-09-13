@@ -143,6 +143,17 @@ class MainDrawer extends StatelessWidget {
                     Navigator.pushNamed(context, '/favorites');
                   },
                 ),
+                _buildAnimatedListTile(
+                  context: context,
+                  icon: Icons.schedule_rounded,
+                  title: 'Deadlines',
+                  index: 3,
+                  onTap: () {
+                    Navigator.pop(context);
+                    // Navigate to a dedicated deadlines screen or show deadlines in favorites
+                    Navigator.pushNamed(context, '/favorites');
+                  },
+                ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: Divider(),
@@ -151,7 +162,7 @@ class MainDrawer extends StatelessWidget {
                   context: context,
                   icon: Icons.settings_rounded,
                   title: 'Settings',
-                  index: 3,
+                  index: 4,
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/settings');
@@ -161,7 +172,7 @@ class MainDrawer extends StatelessWidget {
                   context: context,
                   icon: Icons.nightlight_round,
                   title: themeProvider.isDarkMode ? 'Light Mode' : 'Dark Mode',
-                  index: 4,
+                  index: 5,
                   onTap: () {
                     themeProvider.toggleTheme();
                   },
