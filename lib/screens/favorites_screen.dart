@@ -14,7 +14,7 @@ class FavoritesScreen extends StatelessWidget {
       ),
       body: Consumer<UniversityProvider>(
         builder: (context, universityProvider, child) {
-          final favoriteUniversities = universityProvider.favoriteUniversities;
+          final favoriteUniversities = universityProvider.favorites;
 
           return favoriteUniversities.isEmpty
               ? const Center(
@@ -53,7 +53,7 @@ class FavoriteUniversityTile extends StatelessWidget {
         icon: const Icon(Icons.favorite, color: Colors.red),
         onPressed: () {
           Provider.of<UniversityProvider>(context, listen: false)
-              .toggleFavorite(university.id as University);
+              .toggleFavorite(university);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Favorite toggled')),
           );

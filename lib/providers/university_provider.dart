@@ -1,24 +1,31 @@
-//import 'dart:convert';
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/university.dart';
 
 class UniversityProvider with ChangeNotifier {
   List<University> _universities = [];
-  final List<University> _favoriteUniversities = [];
+  List<University> _favorites = [];
+  final String _favoritesKey = 'favorites';
   bool _isLoading = false;
   String? _error;
   String _searchQuery = '';
   String? _filterProgram;
 
   List<University> get universities => _universities;
-  List<University> get favoriteUniversities => _favoriteUniversities;
+  List<University> get favorites => _favorites;
   bool get isLoading => _isLoading;
   String? get error => _error;
   String get searchQuery => _searchQuery;
   String? get filterProgram => _filterProgram;
 
   final SupabaseClient _supabase = Supabase.instance.client;
+
+  UniversityProvider() {
+    _loadFavorites();
+  }
 
   Future<void> fetchUniversities() async {
     _isLoading = true;
@@ -47,17 +54,54 @@ class UniversityProvider with ChangeNotifier {
     }
   }
 
-  void toggleFavorite(University university) {
-    if (_favoriteUniversities.contains(university)) {
-      _favoriteUniversities.remove(university);
-    } else {
-      _favoriteUniversities.add(university);
+  // Load favorites from SharedPreferences
+  Future<void> _loadFavorites() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final favoritesJson = prefs.getStringList(_favoritesKey);
+
+      if (favoritesJson != null) {
+        _favorites = favoritesJson
+            .map((json) => University.fromJson(jsonDecode(json)))
+            .toList();
+        notifyListeners();
+      }
+    } catch (e) {
+      // Handle errors appropriately
+      if (kDebugMode) {
+        print('Error loading favorites: $e');
+      }
     }
+  }
+
+  // Save favorites to SharedPreferences
+  Future<void> _saveFavorites() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final favoritesJson = _favorites
+          .map((university) => jsonEncode(university.toJson()))
+          .toList();
+      await prefs.setStringList(_favoritesKey, favoritesJson);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error saving favorites: $e');
+      }
+    }
+  }
+
+  void toggleFavorite(University university) {
+    final isExist = _favorites.any((element) => element.id == university.id);
+    if (isExist) {
+      _favorites.removeWhere((element) => element.id == university.id);
+    } else {
+      _favorites.add(university);
+    }
+    _saveFavorites(); // Save after every change
     notifyListeners();
   }
 
   bool isFavorite(University university) {
-    return _favoriteUniversities.contains(university);
+    return _favorites.any((element) => element.id == university.id);
   }
 
   List<University> searchUniversities(String query) {
