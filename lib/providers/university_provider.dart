@@ -5,7 +5,7 @@ import '../models/university.dart';
 
 class UniversityProvider with ChangeNotifier {
   List<University> _universities = [];
-  List<University> _favoriteUniversities = [];
+  final List<University> _favoriteUniversities = [];
   bool _isLoading = false;
   String? _error;
   String _searchQuery = '';
